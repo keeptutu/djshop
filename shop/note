@@ -1,0 +1,204 @@
+superuser
+
+
+tinymce的使用
+安装
+pipinstall django-tinymce
+在setting 中注册
+在 INSTALLED_APPS 里面添加 tinymce
+在 setting 中进行配置
+TINYMCE_DEFAULT_CONFIG = {
+    'theme': 'advanced',
+    'width': 600,
+    'height': 400,
+}
+这是基本的配置
+在项目的urls.py 中添加配置
+path('tinymce/', include('tinymce.urls'))
+在admin中的使用
+from tinymce.moels import HTMLField
+导入带有编辑语言的数据类型
+class Example(models.Model):
+    gccontent = HTMLField()
+
+在settings.py文件中添加使用认证系统的模型类
+AUTH_USER_MODEL = 'user.User'
+不指定的话在迁移的时候会出现报错
+用来替换默认的用户认证表
+
+itsdangerous库 用来对身份信息进行加密
+pip install itsdangerous
+安装库
+使用方法from itsdangerous import TimedJSONWebSignatureSerializer
+通过TimedJSONWebSignatureSerializer类 的dumps方法和loads方法来进行加密和解密
+TimedJSONWebSignatureSerializer('第一个参数是加密的秘钥','第二个参数是加密的过期时间(以秒为单位)')
+使用示例
+from itsdangerous import TimedJSONWebSignatureSerializer
+ss = TimedJSONWebSignatureSerializer('tutu',3600)
+info = {'con':1}
+res = ss.dumps(info) 加密
+res
+b'eyJhbGciOiJIUzUxMiIsImlhdCI6MTU5NjE3NzA0NSwiZXhwIjoxNTk2MTgwNjQ1fQ.eyJjb24iOjF9.omO3uKfz8ONtgb10xR0PwN5v_v_to8A286EcVFWAEa-XVZE_dq0oIIgFafddK5G-mJBS7NIQVeRDOG2YjO27yg'
+ss.loads(res)  解密
+{'con': 1}
+解密超时之后的报错信息
+Traceback (most recent call last):
+  File "<input>", line 1, in <module>
+  File "/home/tutu/.virtualenvs/dailyfresh/lib/python3.6/site-packages/itsdangerous/jws.py", line 205, in loads
+    date_signed=self.get_issue_date(header),
+itsdangerous.exc.SignatureExpired: Signature expired
+
+发送验证邮件的相关步骤
+注册一个带有SMTP功能的邮箱并开启SMTP功能
+在项目的settings文件中添加相关的配置
+# 邮箱SMTP的相关设置
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.163.com'
+EMAIL_PORT = '25'
+# 发送邮件的邮箱
+EMAIL_HOST_USER = '邮箱账号'
+# 邮箱中设置的授权密码
+EMAIL_HOST_PASSWORD = 'smtp的授权码'
+# 收件人看到的发件人信息
+EMAIL_FROM = '发件人的信息'
+django自带的邮件发送
+from django.core.mail import send_mail
+send_mail的四个参数
+subject = '天天生鲜欢迎信息'  # 邮件的主题
+message = ''  # 邮件的正文
+sender = settings.EMAIL_FROM  # 发件人 发件人的字符串中必须包含使用的邮箱的正确地址
+recipient_list = []  # 收件人列表
+message参数只能传递简单的字符串信息
+如果要使用带有http格式的字符串就需要使用另一个参数
+html_message
+
+使用celery进行邮件的异步发送
+在发送邮件的时候会产生一段时间的延迟
+send-mail 是阻塞执行的，会降低用户的体验
+所以最好是使用异步进行发送，让网站可以直接进行跳转，不会产生多余的等待
+安装celery
+在项目的目录下创建一个文件夹(例如celery_tasks)来存放任务
+在celery_tasks 中创建一个python 文件 tasks.py
+
+
+任务的发出者，中间人，处理者可以在同一台电脑上运行， 也可以不在同一台电脑上运行
+处理者也需要任务的代码
+
+在worker存在的电脑上也需要对应的全部项目代码
+并且要安装全部的库
+启动worker的命令
+celery -A celery_tasks.tasks worker -l info
+celery_tasks.tasks worker app存在的程序路径
+worker 作为worker 启动worker
+-l info 输出信息的级别
+阿里云主机不能使用25端口来发送邮件
+所以在设置的时候要使用465端口
+添加ssl设置
+
+用户的登录和认证
+在登录的时候采用django自带的用户认证机制来完成用户信息的校对
+
+使用django自带的用户模块中的login函数来进行用户的登入，将用户的信息保存在session中
+
+
+使用redis来存储session
+安装包 pip install django-redis-sessions
+使用django-redis包来完成相应的操作
+安装包 pip install django-redis
+使用配置cache
+
+记住用户名
+
+
+login_required装饰器
+from django.contrib.auth.decorators import login_required
+这个装饰器只能在函数视图中直接使用
+在使用类视图的时候
+需要在urls文件中导入上述的装饰函数
+在path的函数调用时用装饰器包裹class.as_view()来实现正常的功能
+
+使用mixin
+见utils.mixin.py
+
+判断用户是否登录
+在用户登录后，返回的request会带有一个user属性45 5
+可以使用request.user.is_anthenticated()方法来判断用户的登录状况
+返回的时候布尔值
+在使用的时候，除了模板信息之外，django也会把request.user也传给模板文件
+
+用户的登出
+在django模块中有自带的loginout()函数来处理用户的登出
+
+地址模型管理器类
+来整理重复的代码,将相同的功能进行封装
+见user.models
+AddressManager
+
+历史浏览记录
+在访问商品的详情页面的时候需要添加历史浏览记录(在商品详情的对应的视图中)
+
+在访问用户中心个人信息页面的时候需要显示浏览记录
+
+历史浏览记录的存储方式
+尽量不要存储在数据库中
+
+使用redis 内存形的数据库来储存
+
+在redis中存储地址浏览记录的格式?
+string
+hash
+list
+set
+zset
+
+在存储用户的浏览历史记录的时候
+每个用户使用一条数据进行保存 使用list类型的数据
+history_用户id:[]
+在添加历史浏览记录的时候,用户最新浏览的商品id加入到列表的左侧
+redis有对应的lpush 和lrange 来处理
+
+
+使用FastDFS来作为项目的分布式存储系统
+https://zhuanlan.zhihu.com/p/29133587安装教程网上参考
+
+
+
+
+自定义文件的储存类
+通过storage类来改写filesystemstorage类的相关功能
+在settings中设置文件上传的配置
+DEFAULT_FILE_STORAGE = 'utils.fdfs.storage.FDFSStorage'
+
+首页页面的静态化
+使用celery
+当管理员后台修改了首页中的相关信息时再重新生成新的首页静态页面
+通过增加ModelAdmin的功能来实现
+
+对常用页面的常用数据进行一个缓存
+优化数据库的使用
+把页面的数据保存在缓存中
+在再次使用的时候现存缓存中获取
+无法从缓存中的获取的时候再去从数据库获取
+减少数据库查询的次数,节约资源
+配置settings中cache来更改缓存的设置
+
+缓存等级
+站点级
+view级
+模板片段级
+
+django提供的缓存并不适用
+要使用底层的API来实现
+django.core.cache.cache
+
+
+静态页面的设计和缓存都是为了优化网站本身的性能
+防止恶意攻击 DDos攻击
+
+使用redis来存储购物车的记录
+一个用户的购物车记录用一条记录来保存
+使用hash格式的数据
+'cart_用户id':['sku_id':商品数目,]
+在redis中使用hlen可以获取hash中的商品条目数量
+
+
