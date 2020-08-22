@@ -205,4 +205,4 @@ django.core.cache.cache
 在redis中使用hlen可以获取hash中的商品条目数量
 
 
-rebase2
+rebase23
