@@ -66,6 +66,9 @@ class GoodsImage(BaseModel):
     sku = models.ForeignKey('GoodsSKU', verbose_name='商品', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='goods', verbose_name='图片路径')
 
+    def __str__(self):
+        return self.sku.name
+
     class Meta:
         db_table = 'df_goods_image'
         verbose_name = '商品图片'
@@ -77,6 +80,9 @@ class IndexGoodsBanner(BaseModel):
     sku = models.ForeignKey('GoodsSKU', verbose_name='商品', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='banner', verbose_name='图片')
     index = models.SmallIntegerField(default=0, verbose_name='展示顺序') # 0 1 2 3
+
+    def __str__(self):
+        return self.sku.name
 
     class Meta:
         db_table = 'df_index_banner'
@@ -95,6 +101,9 @@ class IndexTypeGoodsBanner(BaseModel):
     sku = models.ForeignKey('GoodsSKU', verbose_name='商品SKU', on_delete=models.CASCADE)
     display_type = models.SmallIntegerField(default=1, choices=DISPLAY_TYPE_CHOICES, verbose_name='展示类型')
     index = models.SmallIntegerField(default=0, verbose_name='展示顺序')
+
+    def __str__(self):
+        return self.sku.name
 
     class Meta:
         db_table = 'df_index_type_goods'

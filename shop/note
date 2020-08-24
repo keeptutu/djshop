@@ -204,5 +204,14 @@ django.core.cache.cache
 'cart_用户id':['sku_id':商品数目,]
 在redis中使用hlen可以获取hash中的商品条目数量
 
+用户的浏览记录是通过list的方式保存在redis中
+每个用户对应的浏览记录的key是'history_(user_id)'
 
-rebase23
+
+使用搜索引擎来进行全站搜索,提升用户的体验
+haystack全文搜索框架
+whoosh引擎
+
+
+
+

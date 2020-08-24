@@ -209,6 +209,7 @@ class LogoutView(View):
 class UserInfoView(LoginRequiredMixin,View):
     '''用户信息页面'''
     def get(self, request):
+        print(2)
         '''显示'''
         # page = user
         # request.user
@@ -223,18 +224,25 @@ class UserInfoView(LoginRequiredMixin,View):
         # 获取用户最新浏览的五条浏览记录
         sku_ids = con.lrange(history_key, 0, 4)
         # 从数据库中查询用户浏览商品的具体信息
-        goods_li = GoodsSKU.objects.filter(id__in=sku_ids)
+        # goods_li = GoodsSKU.objects.filter(id__in=sku_ids)
         # 通过遍历来获取商品的信息
+        print(sku_ids)
         goods_li = []
         for id in sku_ids:
-            goods = GoodsSKU.objects.get(id=id)
+            print(1)
+            print(id)
+            try:
+                goods = GoodsSKU.objects.get(id=id)
+            except GoodsSKU.DoesNotExist:
+                pass
+            print(3)
             goods_li.append(goods)
 
         # 组织上下文
         context = {
             'page': 'page',
             'address': address,
-            'goods_li': goods_li
+            'goods_li':goods_li
         }
 
         return render(request, 'user_center_info.html', context)

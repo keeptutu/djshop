@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'order',  # 购物车模块
     'goods',  # 订单模块
     'tinymce',  # 富文本编辑器
+    'haystack',  # 注册全文检索框架
 ]
 
 MIDDLEWARE = [
@@ -134,7 +135,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # 富文本编辑器的配置信息
 TINYMCE_DEFAULT_CONFIG = {
-    'theme': 'advanced',  # 主题的选择
+    # 'theme': 'advanced',  # 主题的选择
     'width': 600,  # 宽度
     'height': 400,  # 高度
 }
@@ -185,3 +186,17 @@ DEFAULT_FILE_STORAGE = 'utils.fdfs.storage.FDFSStorage'
 FDFS_CLIENT_CONF = './utils/fdfs/client.conf'
 # FDFS存储服务器上nginx的ip和端口号
 FDFS_URL = '127.0.0.1/8888'
+
+
+# 配置全文检索框架
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        # 使用whoose引擎
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        # 索引文件目录
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index')
+    }
+}
+
+# 当增删改数据时,自动生成全新的索引
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
