@@ -38,12 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'haystack',  # 注册全文检索框架
     'user',  # 用户模块
     'cart',  # 商品模块
     'order',  # 购物车模块
     'goods',  # 订单模块
     'tinymce',  # 富文本编辑器
-    'haystack',  # 注册全文检索框架
+
 ]
 
 MIDDLEWARE = [
@@ -192,7 +193,7 @@ FDFS_URL = '127.0.0.1/8888'
 HAYSTACK_CONNECTIONS = {
     'default': {
         # 使用whoose引擎
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'ENGINE': 'haystack.backends.whoosh_cn_backend.WhooshEngine',
         # 索引文件目录
         'PATH': os.path.join(BASE_DIR, 'whoosh_index')
     }
@@ -200,3 +201,4 @@ HAYSTACK_CONNECTIONS = {
 
 # 当增删改数据时,自动生成全新的索引
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
