@@ -1,5 +1,5 @@
 {% extends 'base_no_cart.html' %}
-{% load staticfiles %}
+{% load static %}
 {% block title %}天天生鲜-购物车{% endblock title %}
 {% block page_title %}购物车{% endblock page_title %}
 {% block body %}
@@ -12,7 +12,7 @@
 		<li class="col05">小计</li>
 		<li class="col06">操作</li>
 	</ul>
-    <form method="post" action="{% url 'order:place' %}">
+    <form method="post" action="">
     {% for sku in skus %}
 	<ul class="cart_list_td clearfix">
 		<li class="col01"><input type="checkbox" name="sku_ids" value="{{ sku.id }}" checked></li>
@@ -24,7 +24,8 @@
 			<div class="num_add">
 				<a href="javascript:;" class="add fl">+</a>
 				<input type="text" sku_id="{{ sku.id }}" class="num_show fl" value="{{ sku.count }}">
-				<a href="javascript:;" class="minus fl">-</a>	
+
+				<a href="javascript:;" class="minus fl">-</a>
 			</div>
 		</li>
 		<li class="col07">{{ sku.amount }}元</li>
@@ -107,23 +108,24 @@
     error_update = false
     total = 0
     function update_remote_cart_info(sku_id, count) {
-        csrf = $('input[name="csrfmiddlewaretoken"]').val()
+    	csrf = $('input[name="csrfmiddlewaretoken"]').val()
         // 组织参数
         params = {'sku_id':sku_id, 'count':count, 'csrfmiddlewaretoken':csrf}
         // 设置ajax请求为同步
         $.ajaxSettings.async = false
         // 发起ajax post请求，访问/cart/update, 传递参数:sku_id count
         // 默认发起的ajax请求都是异步的，不会等回调函数执行
-        $.post('/cart/update', params, function (data) {
+        $.post('/cart/update/', params, function (data) {
             if (data.res == 5){
                 // 更新成功
                 error_update = false
                 total = data.total_count
+
             }
             else{
                 // 更新失败
                 error_update = true
-                alert(data.errmsg)
+
             }
         })
         // 设置ajax请求为异步
@@ -143,7 +145,7 @@
         update_remote_cart_info(sku_id, count)
 
         // 判断更新是否成功
-        if (error_update == false){
+        if (error_update === false){
             // 重新设置商品的数目
             $(this).next().val(count)
             // 计算商品的小计
@@ -175,7 +177,7 @@
         update_remote_cart_info(sku_id, count)
 
         // 判断更新是否成功
-        if (error_update == false){
+        if (error_update === false){
             // 重新设置商品的数目
             $(this).prev().val(count)
             // 计算商品的小计
@@ -215,7 +217,7 @@
         update_remote_cart_info(sku_id, count)
 
         // 判断更新是否成功
-        if (error_update == false){
+        if (error_update === false){
             // 重新设置商品的数目
             $(this).val(count)
             // 计算商品的小计
@@ -245,7 +247,7 @@
         // 获取商品所在的ul元素
         sku_ul = $(this).parents('ul')
         // 发起ajax post请求， 访问/cart/delete, 传递参数:sku_id
-        $.post('/cart/delete', params, function (data) {
+        $.post('/cart/delete/', params, function (data) {
             if (data.res == 3){
                 // 删除成功，异常页面上商品所在的ul元素
                 sku_ul.remove()
@@ -263,6 +265,5 @@
             }
         })
     })
-
     </script>
 {% endblock bottomfiles %}

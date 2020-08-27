@@ -38,7 +38,7 @@
                 </ul>
             </div>
 
-			<div class="total">总价：<em>16.80元</em></div>
+			<div class="total">总价：<em></em></div>
 			<div class="operate_btn">
                 {% csrf_token %}
 				<a href="javascript:;" class="buy_btn">立即购买</a>
@@ -165,8 +165,8 @@
             // 组织参数
             params = {'sku_id':sku_id, 'count':count, 'csrfmiddlewaretoken':csrf}
             // 发起ajax post请求，访问/cart/add, 传递参数:sku_id count
-            $.post('/cart/add', params, function (data) {
-                if (data.res == 5){
+            $.post('/cart/add/', params, function (data) {
+            	if (data.res == 5){
                     // 添加成功
                     $(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
                     $(".add_jump").stop().animate({
