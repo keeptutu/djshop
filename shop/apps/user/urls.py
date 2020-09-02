@@ -13,7 +13,7 @@ urlpatterns = [
   # path('order/', login_required(UserOrderView.as_view()), name='order'),  # 用户订单页面
 #   path('address/', login_required(AdsdressView.as_view()), name='address')  # 用户地址页面
     path('', UserInfoView.as_view(), name='user'), # 以下三个都是用户信息页面
-    path('order/', UserOrderView.as_view(), name='order'),
+    path('order/<int:page>/', UserOrderView.as_view(), name='order'),
     path('address/', AdsdressView.as_view(), name='address'),
 
  ]

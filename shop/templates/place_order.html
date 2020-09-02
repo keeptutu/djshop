@@ -1,5 +1,5 @@
 {% extends 'base_no_cart.html' %}
-{% load staticfiles %}
+{% load static %}
 {% block title %}天天生鲜-提交订单{% endblock title %}
 {% block page_title %}提交订单{% endblock page_title %}
 {% block body %}
@@ -91,7 +91,7 @@
             params = {'addr_id':addr_id, 'pay_method':pay_method, 'sku_ids':sku_ids,
                         'csrfmiddlewaretoken':csrf}
             // 发起ajax post请求，访问/order/commit, 传递的参数: addr_id pay_method, sku_ids
-            $.post('/order/commit', params, function (data) {
+            $.post('/order/commit/', params, function (data) {
                 if (data.res == 5){
                     // 创建成功
                     alert('创建成功')
@@ -102,17 +102,17 @@
             })
 
 
-{#			localStorage.setItem('order_finish',2);#}
-{##}
-{#			$('.popup_con').fadeIn('fast', function() {#}
-{##}
-{#				setTimeout(function(){#}
-{#					$('.popup_con').fadeOut('fast',function(){#}
-{#						window.location.href = 'index.html';#}
-{#					});	#}
-{#				},3000)#}
-{#				#}
-{#			});#}
+// {#			localStorage.setItem('order_finish',2);#}
+// {##}
+// {#			$('.popup_con').fadeIn('fast', function() {#}
+// {##}
+// {#				setTimeout(function(){#}
+// {#					$('.popup_con').fadeOut('fast',function(){#}
+// {#						window.location.href = 'index.html';#}
+// {#					});	#}
+// {#				},3000)#}
+// {#				#}
+// {#			});#}
 		});
 	</script>
 {% endblock bottomfiles %}
